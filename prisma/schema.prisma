@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Song {
+  id               String    @id @default(cuid())
+  name             String
+  movie            String    @default("")
+  lyricist         String    @default("")
+  singer           String    @default("")
+  genre            String    @default("")
+  mood             String    @default("")
+  status           String    @default("NOT_STARTED")
+  isFavorite       Boolean   @default(false)
+  difficulty       Int       @default(3)
+  highNotes        Int       @default(3)
+  breathControl    Int       @default(3)
+  emotion          Int       @default(3)
+  personalRating   Int       @default(0)
+  notes            String    @default("")
+  performanceNotes String    @default("")
+  instagramLink    String    @default("")
+  datePracticed    DateTime?
+  dateRecorded     DateTime?
+  datePosted       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  practiceLogs   PracticeLog[]
+  recordingLogs  RecordingLog[]
+  instagramPosts InstagramPost[]
+}
+
+model PracticeLog {
+  id           String   @id @default(cuid())
+  songId       String
+  song         Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  date         DateTime @default(now())
+  durationMins Int      @default(0)
+  notes        String   @default("")
+  createdAt    DateTime @default(now())
+}
+
+model RecordingLog {
+  id        String   @id @default(cuid())
+  songId    String
+  song      Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  filePath  String   @default("")
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+}
+
+model InstagramPost {
+  id           String   @id @default(cuid())
+  songId       String
+  song         Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  datePosted   DateTime @default(now())
+  link         String   @default("")
+  views        Int      @default(0)
+  likes        Int      @default(0)
+  comments     Int      @default(0)
+  shares       Int      @default(0)
+  saves        Int      @default(0)
+  reach        Int      @default(0)
+  followerGain Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Goal {
+  id        String    @id @default(cuid())
+  title     String
+  target    Int
+  current   Int       @default(0)
+  unit      String    @default("")
+  deadline  DateTime?
+  category  String    @default("songs")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Achievement {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  title       String
+  description String
+  icon        String
+  unlockedAt  DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model CalendarEntry {
+  id        String   @id @default(cuid())
+  date      DateTime
+  type      String
+  songId    String   @default("")
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+}
